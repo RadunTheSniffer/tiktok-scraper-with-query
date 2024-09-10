@@ -49,6 +49,49 @@ Set Up the Server Environment
    ```bash
    pip install Flask tweepy snscrape
 
+# Handle Multiple Clients with Gunicorn and Nginx
+
+1. **Install Gunicorn**:
+   ```bash
+   pip install gunicorn
+   ```
+
+2. **Run the Flask App with Gunicorn**:
+   ```bash
+   gunicorn -w 4 -b 0.0.0.0:5000 app:app
+   ```
+
+3. **Install Nginx**:
+   ```bash
+   sudo apt install nginx
+   ```
+
+4. **Configure Nginx**:
+   Create a new configuration file for your Flask app:
+   ```bash
+   sudo nano /etc/nginx/sites-available/twitter-scraper
+   ```
+
+   Add the following configuration:
+   ```nginx
+   server {
+       listen 80;
+       server_name your_server_ip;
+
+       location / {
+           proxy_pass http://127.0.0.1:5000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+   ```
+
+5. **Enable the Configuration**:
+   ```bash
+   sudo ln -s /etc/nginx/sites-available/twitter-scraper /etc/nginx/sites-enabled
+   sudo
 
 
 
