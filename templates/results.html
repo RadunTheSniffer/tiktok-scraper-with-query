@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraped Tweets</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scraped Tweets</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Date</th>
+                <th>Tweet</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tweet in tweets %}
+            <tr>
+                <td>{{ tweet.username }}</td>
+                <td>{{ tweet.date }}</td>
+                <td>{{ tweet.text }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
