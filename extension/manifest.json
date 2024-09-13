@@ -1,5 +1,5 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 3,                         
     "name": "Twitter Scraper Extension",
     "version": "1.0",
     "permissions": ["activeTab", "scripting"],
@@ -7,7 +7,7 @@
         "default_popup": "popup.html",
         "default_icon": {
             "16": "icons/menu-burger(16).png",
-            "32": "icons/menu-burger(32).png",
+            "32": "icons/menu-burger(32).png",  
             "128": "icons/menu-burger(128).png"
         }
     }
