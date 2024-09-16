@@ -1,4 +1,4 @@
-Sure! Here’s an updated `README.md` file that reflects the changes and additions for using FastAPI, Selenium, and the new structure for the server setup and configuration.
+
 
 ### Updated `README.md`
 
