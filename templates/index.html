@@ -3,23 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twitter Scraper</title>
+    <title>TikTok Scraper</title>
 </head>
 <body>
-    <h1>Twitter Scraper</h1>
-    <form action="/scrape_tweepy" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+    <h1>TikTok Scraper</h1>
+    <form id="scrapeForm" action="/scrape" method="post">
+        <label for="query">Search Query:</label>
+        <input type="text" id="query" name="query" required>
         <label for="count">Number of Posts:</label>
         <input type="number" id="count" name="count" required>
-        <button type="submit">Scrape with Tweepy</button>
-    </form>
-    <form action="/scrape_snscrape" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="count">Number of Posts:</label>
-        <input type="number" id="count" name="count" required>
-        <button type="submit">Scrape with Snscrape</button>
+        <button type="submit">Scrape</button>
     </form>
 </body>
 </html>

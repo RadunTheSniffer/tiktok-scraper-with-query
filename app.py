@@ -1,37 +1,37 @@
-from flask import Flask, request, jsonify, render_template
-import snscrape.modules.twitter as sntwitter
-from datetime import datetime
-import time
+from fastapi import FastAPI, Form, Request, HTTPException
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from scraper import scrape_tiktok
 
-app = Flask(__name__)
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
-@app.route('/scrape_snscrape', methods=['POST'])
-def scrape_snscrape():
-    username = request.form.get('username')
-    count = request.form.get('count')
-    if not username or not count:
-        return "Missing username or count", 400
-    count = int(count)
-    tweets = []
+@app.post("/scrape")
+async def scrape_tiktok_posts(request: Request, query: str = Form(...), count: int = Form(...)):
     try:
-        for tweet in sntwitter.TwitterSearchScraper(f'from:{username}').get_items():
-            if len(tweets) == count:
-                break
-            tweets.append({
-                'username': tweet.user.username,
-                'date': tweet.date.strftime('%Y-%m-%d %H:%M:%S'),
-                'text': tweet.content
-            })
-            time.sleep(1)  # Add a 1-second delay between requests
-    except sntwitter.ScraperException as e:
-        return f"An error occurred: {e}", 500
-    tweets.sort(key=lambda x: datetime.strptime(x['date'], '%Y-%m-%d %H:%M:%S'), reverse=True)
-    return render_template('results.html', tweets=tweets)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+        # Validate input
+        if not query or count <= 0:
+            raise ValueError("Invalid input: query cannot be empty and count must be positive.")
+        
+        # Perform scraping
+        scraped_data = scrape_tiktok(query, count)
+        
+        # Ensure data was retrieved
+        if not scraped_data:
+            raise ValueError("No data retrieved.")
+        
+        # Render results page with scraped data
+        return templates.TemplateResponse("results.html", {"request": request, "tweets": scraped_data})
+    
+    except ValueError as e:
+        # Handle known exceptions and provide user-friendly messages
+        return HTMLResponse(content=f"<h1>Error: {str(e)}</h1>", status_code=400)
+    
+    except Exception as e:
+        # Handle unexpected errors
+        return HTMLResponse(content=f"<h1>An unexpected error occurred: {str(e)}</h1>", status_code=500)
 
