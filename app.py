@@ -56,18 +56,11 @@ def scrape_tiktok(query: str, count: int):
     driver = webdriver.Chrome(service=service, options=options)
     
     # Hide the fact that we are using Selenium
-    driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-        "source": """
-        Object.defineProperty(navigator, 'webdriver', {
-            get: () => undefined
-        })
-        """
-    })
+    
     
     # Format the query to match the URL structure
     formatted_query = query.replace(" ", "%20")
-    timestamp = int(time.time() * 1000)
-    url = f"https://www.tiktok.com/search?q={formatted_query}&t={timestamp}"
+    url = f"https://www.tiktok.com/search?q={formatted_query}"
     
     print(f"Opening URL: {url}")
     # Open TikTok and search for the query
