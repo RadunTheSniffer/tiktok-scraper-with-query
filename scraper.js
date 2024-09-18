@@ -8,14 +8,6 @@ async function scrapeTikTok(query, count) {
 
     await page.goto(url, { waitUntil: 'networkidle2' });
 
-    // Handle potential popups
-    try {
-        await page.waitForSelector('.popup-close-button', { timeout: 5000 });
-        await page.click('.popup-close-button');
-    } catch (error) {
-        console.log('No popup found');
-    }
-
     // Inject the provided script into the page
     await page.evaluate((count) => {
         window.allVideos = [];
@@ -57,14 +49,12 @@ async function scrapeTikTok(query, count) {
         }
 
         function getInitialVideoIDs() {
-            const videos = document.querySelectorAll('div[data-e2e="search-item"]');
+            const videos = document.querySelectorAll('.tt-feed .video-feed-item-wrapper');
             videos.forEach(video => {
                 const urlObj = new URL(video.href);
                 const path = urlObj.pathname;
                 const id = (path.match(/\/video\/(\d+)/) || [])[1];
-                if (id) {
-                    allVideos.push(id);
-                }
+                allVideos.push(id);
             });
         }
     }, count);
@@ -74,10 +64,6 @@ async function scrapeTikTok(query, count) {
 
     // Retrieve the video IDs
     const videoIDs = await page.evaluate(() => window.allVideos);
-
-    // Print the page content for debugging
-    const content = await page.content();
-    console.log(content);
 
     await browser.close();
     return videoIDs.slice(0, count);
